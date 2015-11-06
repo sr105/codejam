@@ -3,7 +3,7 @@
 """
 Solution for Problem A. Bot Trust
 
-https://docs.python.org/3.3/library/string.html#format-string-syntax
+https://code.google.com/codejam/contest/975485/dashboard
 """
 
 DEBUG = 0
