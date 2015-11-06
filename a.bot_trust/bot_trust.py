@@ -19,7 +19,7 @@ class Bot:
             self.position += 1 if self.position < self.button else -1
             return 'Move to button {}'.format(self.position)
         if other_bot.has_move() and other_bot.index < self.index:
-            # we have to wait for other bot
+            # we have to wait for the other bot
             return 'Stay at button {}'.format(self.position)
         # press our button
         self.button_pressed = True
