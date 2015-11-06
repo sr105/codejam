@@ -86,16 +86,8 @@ def do_test_cases(filename):
         for num, test in enumerate(test_cases):
             print ('Case #{}: {}'.format(num + 1, run_test(test)))
 
-def main():
-    """main: if no filename is given, run the example in debug mode"""
-    global DEBUG
-    import sys
-    if len(sys.argv) > 1:
-        filename = sys.argv[1]
-    else:
-        filename = 'first_input.txt'
-        DEBUG = 1
-    do_test_cases(filename)
-
 if __name__ == '__main__':
-    main()
+    import sys
+    if not DEBUG and len(sys.argv) == 1:
+        DEBUG = 1
+    do_test_cases(sys.argv[1] if len(sys.argv) > 1 else 'first_input.txt')
