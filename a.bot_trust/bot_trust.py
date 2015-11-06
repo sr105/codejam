@@ -1,18 +1,26 @@
 #!/usr/bin/env python3
 
-# https://docs.python.org/3.3/library/string.html#format-string-syntax
+"""
+Solution for Problem A. Bot Trust
 
-debug = False
+https://docs.python.org/3.3/library/string.html#format-string-syntax
+"""
 
-class Bot:
+DEBUG = 0
+
+class Bot(object):
+    """Bot that moves and presses buttons"""
     def __init__(self, color, test):
         self.color = color
         self.index = -1
         self.position = 1
         self.test = test
+        self.button = 0
+        self.button_pressed = False
         self.get_next_move()
 
     def move(self, other_bot):
+        """makes a move or presses a button if possible"""
         if not self.has_move():
             return 'Stay at button {}'.format(self.position)
         if self.position != self.button:
@@ -26,29 +34,37 @@ class Bot:
         return 'Push button {}'.format(self.button)
 
     def end_of_move(self):
+        """perform end of move operations once all bots have moved"""
         if not self.has_move() or self.button_pressed:
             self.get_next_move()
 
     def get_next_move(self):
+        """get the next available move for this bot"""
         self.button = 0
         self.button_pressed = False
         try:
             self.index = self.test.index(self.color, self.index + 1)
             self.button = int(self.test[self.index + 1])
-            #print('next move for {} is to {}, index = {}'.format(self.color, self.button, self.index))
+            if DEBUG > 1:
+                print('{}: next move is to {}, index = {}'.format(self.color,
+                                                                  self.button,
+                                                                  self.index))
         except ValueError:
-            #print('no next move for {}'.format(self.color))
-            pass
+            if DEBUG > 1:
+                print('{}: no next move'.format(self.color))
 
     def has_move(self):
-        return self.button != 0
-    
+        """reports whether or not this bot has any moves remaining"""
+        return self.button
+
+
 def run_test(test):
-    num_steps,*test = test.split()
+    """run a single test case"""
+    test = test.split()[1:]
     orange = Bot('O', test)
     blue = Bot('B', test)
     count = 0
-    if debug:
+    if DEBUG:
         print('Time   | Orange             | Blue')
         print('-------+--------------------+-------------------')
     while True:
@@ -57,19 +73,29 @@ def run_test(test):
         count += 1
         text1 = orange.move(blue)
         text2 = blue.move(orange)
-        if debug:
+        if DEBUG:
             print('  {:^3}  | {:18} | {}'.format(count, text1, text2))
         orange.end_of_move()
         blue.end_of_move()
     return count
-    
-def do_test_cases(input_filename):
-    with open(input_filename) as input:
-        test_case_count = int(input.readline())
-        for num, test in enumerate(input):
+
+def do_test_cases(filename):
+    """read test case lines from filename and process them"""
+    with open(filename) as test_cases:
+        test_cases.readline() # test_case_count
+        for num, test in enumerate(test_cases):
             print ('Case #{}: {}'.format(num + 1, run_test(test)))
 
-if __name__ == '__main__':
+def main():
+    """main: if no filename is given, run the example in debug mode"""
+    global DEBUG
     import sys
-    input_filename = sys.argv[1] if len(sys.argv) > 1 else 'input.txt'
-    do_test_cases(input_filename)
+    if len(sys.argv) > 1:
+        filename = sys.argv[1]
+    else:
+        filename = 'first_input.txt'
+        DEBUG = 1
+    do_test_cases(filename)
+
+if __name__ == '__main__':
+    main()
